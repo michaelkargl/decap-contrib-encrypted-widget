@@ -1,26 +1,27 @@
-<h1 align='center'>decap-cms-widget-starter</h1>
+<h1 align='center'>decap-contrib-encrypted-widget</h1>
 
 <br />
-<p align='center'><i>A starter template for custom <a href="https://decapcms.org/docs/custom-widgets/" target="_blank">Decap CMS widget</a> development, powered with Vite.</i></p>
+<p align='center'><i>A DecapCMS widget for producing secret content.</a> development, powered with Vite.</i></p>
 
-### Info
+## About
 
-A zero config, out-of-box template for developing your own custom Decap CMS Widget, with latest version of Vite.
+This widget allows the use of the `encrypted` widget that encrypts a secret using a symmetric-key algorithm.
+
+```mermaid
+sequenceDiagram
+    Alice->>Decap: Defines secret key
+    Alice->>Decap: Writes secret content
+    Decap->>Markdown: Produces secret markdown
+    Alice->>Bob: Shares key with Bob
+    Bob->> Markdown: Decrypts using secret key
+```
 
 ### Quick Start
-
-First, run `npx degit iamspark1e/decap-cms-widget-starter my-widget` or click the "Use this template" button on [Github Repo](https://github.com/iamspark1e/decap-cms-widget-starter)
-
-Then get into your project folder, no additional configuration, just run,
 
 ```bash
 yarn install
 yarn run dev
 ```
-
-> If you need to change running port, you can pass it via environment variable, for example, `PORT=18080 npm run dev`
-
-After the dev server started, you can modify the `Control.jsx` and `Preivew.jsx` as you wish, dev server will be refreshed automatically with HMR, powered by Vite.
 
 ### Developing Widget
 
@@ -49,9 +50,9 @@ If you want to test your built widget file, you can start a "Preview" mode via `
 ### Production & Publishing Widget
 
 ```bash
-npm run build
-npm version release
-npm run publish
+yarn run build
+# npm version release
+# npm run publish
 ```
 
 ### Questions
