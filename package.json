@@ -1,7 +1,7 @@
 {
-    "name": "decap-cms-widget-starter",
+    "name": "decap-contrib-encrypted-widget",
     "version": "1.0.0",
-    "description": "A starter template for custom Decap CMS widget development, with Vite",
+    "description": "A DecapCMS widget for producing secret content",
     "main": "dist/main.js",
     "keywords": [
         "netlify-cms-widget",
@@ -11,10 +11,10 @@
         "starter"
     ],
     "repository": {
-        "url": "git@github.com:iamspark1e/decap-cms-widget-starter.git"
+        "url": "https://github.com/michaelkargl/decap-contrib-encrypted-widget.git"
     },
-    "homepage": "https://github.com/iamspark1e/decap-cms-widget-starter",
-    "author": "iamspark1e",
+    "homepage": "https://github.com/michaelkargl/decap-contrib-encrypted-widget#",
+    "author": "michaelkargl",
     "license": "MIT",
     "devDependencies": {
         "@rollup/plugin-replace": "^5.0.2",
@@ -25,11 +25,13 @@
         "vite-plugin-css-injected-by-js": "^3.3.0"
     },
     "dependencies": {
+        "decap-cms-app": "^3.6.3",
         "prop-types": "^15.8.1",
-        "rollup-plugin-copy": "^3.4.0"
+        "rollup-plugin-copy": "^3.4.0",
+        "slate-hyperscript": "^0.100.0"
     },
     "peerDependencies": {
-        "react": "^16"
+        "react": "^18"
     },
     "engines": {
         "node": ">=18"

@@ -9,7 +9,13 @@
 
 <body>
     <div id="root"></div>
-    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+     <script>
+        // Polyfill for Node.js globals
+        // Decap 3.6.3 depends on `@iarna/toml` which uses `global`.
+        // By default `global` is not defined in the browser, therefore
+        // we need to polyfill it.
+        window.global = window;
+    </script>
     <script type="module" src="./src/main.js"></script>
 </body>
 

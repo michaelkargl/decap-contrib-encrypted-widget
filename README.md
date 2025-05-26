@@ -14,8 +14,8 @@ First, run `npx degit iamspark1e/decap-cms-widget-starter my-widget` or click th
 Then get into your project folder, no additional configuration, just run,
 
 ```bash
-npm install
-npm run dev
+yarn install
+yarn run dev
 ```
 
 > If you need to change running port, you can pass it via environment variable, for example, `PORT=18080 npm run dev`
