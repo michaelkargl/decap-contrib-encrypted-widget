@@ -6,9 +6,12 @@ if (typeof window !== 'undefined') {
     window.StarterPreview = Preview
 }
 
-export { Control as StarterControl, Preview as StarterPreview }
-
 if (!import.meta.env.PROD) {
     console.log('[decap-cms-widget-starter] Running in development mode...')
     import("./dev.js")
+}
+
+export {
+    Control as StarterControl,
+    Preview as StarterPreview
 }

@@ -4,11 +4,26 @@ import react from '@vitejs/plugin-react'
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
 import replace from '@rollup/plugin-replace'
 import copy from 'rollup-plugin-copy'
+import {nodePolyfills} from "vite-plugin-node-polyfills";
 
 export default defineConfig(({ command, mode }) => {
+    const baseConfig = {
+        plugins: [
+                react(),
+                nodePolyfills({
+                    protocolImports: true,
+                    globals: {
+                        global: true,
+                        process: true,
+                        Buffer: true
+                    }
+                })
+            ],
+    }
+
     if (mode !== 'production' || command === 'serve') {
         return {
-            plugins: [react()],
+            ...baseConfig,
             server: {
                 port: process.env.PORT || 8080,
                 host: '0.0.0.0'
@@ -21,8 +36,9 @@ export default defineConfig(({ command, mode }) => {
         }
     }
     return {
+        ...baseConfig,
         plugins: [
-            react(),
+            ...baseConfig.plugins,
             cssInjectedByJsPlugin(),
             replace({
                 'process.env.NODE_ENV': JSON.stringify(mode),
