@@ -1,0 +1,1 @@
+export type CryptoKeyBase64 = string;

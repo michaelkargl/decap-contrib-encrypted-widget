@@ -19,23 +19,23 @@ export const Control: React.FC<DecapControlProps<string>> = (props) => {
     const [rawValue, setRawValue] = React.useState(props.value);
 
     useEffect(() => {
-        async function encryptDecryptAsync(value: string): Promise<void> {
+        async function encryptDecryptAsync(value: string, password: string): Promise<void> {
             if (value === null || value === undefined) {
                 return;
             }
 
             const cryptoService = await CryptoService.buildAsync(AES_LENGTH, KEY_LENGTH);
-            const encrypted = await cryptoService.encryptValueAsync(value);
+            const encrypted = await cryptoService.encryptValueAsync(value, password);
             try {
-                const decrypted = await cryptoService.decryptValueAsync({...encrypted});
-                props.onChange(decrypted);
+                const decrypted = await cryptoService.decryptValueAsync(encrypted, `${password}`);
+                props.onChange(`${decrypted} ===> ${encrypted}`);
             } catch (e) {
                 console.error(e);
-                props.onChange(encrypted.cipherTextBase64);
+                props.onChange(encrypted);
             }
         }
 
-        encryptDecryptAsync(rawValue ?? '');
+        encryptDecryptAsync(rawValue ?? '', 'secret-password').then(console.log);
     }, [rawValue]);
 
     return (
