@@ -20,8 +20,9 @@ sequenceDiagram
 
 ```bash
 yarn install
-yarn run dev
+yarn run start
 ```
+
 
 ### Developing Widget
 

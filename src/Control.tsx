@@ -2,9 +2,9 @@ import React, {useEffect} from 'react';
 import {AesLength} from "./AesLength";
 import {KeyLength} from "./KeyLength";
 import {CryptoService} from "./CryptoService";
+import {AES_LENGTH, KEY_LENGTH} from "./Config";
 
-const AES_LENGTH: AesLength = 128;
-const KEY_LENGTH: KeyLength = 16;
+
 
 export interface DecapControlProps<TValue = any> {
     onChange: (value: TValue) => void,
@@ -17,6 +17,7 @@ export interface DecapControlProps<TValue = any> {
 
 export const Control: React.FC<DecapControlProps<string>> = (props) => {
     const [rawValue, setRawValue] = React.useState(props.value);
+    const [password, setPassword] = React.useState("");
 
     useEffect(() => {
         async function encryptDecryptAsync(value: string, password: string): Promise<void> {
@@ -26,23 +27,25 @@ export const Control: React.FC<DecapControlProps<string>> = (props) => {
 
             const cryptoService = await CryptoService.buildAsync(AES_LENGTH, KEY_LENGTH);
             const encrypted = await cryptoService.encryptValueAsync(value, password);
-            try {
-                const decrypted = await cryptoService.decryptValueAsync(encrypted, `${password}`);
-                props.onChange(`${decrypted} ===> ${encrypted}`);
-            } catch (e) {
-                console.error(e);
-                props.onChange(encrypted);
-            }
+            props.onChange(`${encrypted}`);
         }
 
-        encryptDecryptAsync(rawValue ?? '', 'secret-password').then(console.log);
-    }, [rawValue]);
+        encryptDecryptAsync(rawValue ?? '', password).then(console.log);
+    }, [rawValue, password]);
 
     return (
         <div className='control-component'>
             <p>Control.jsx, You can put some text into <code>&lt;input /&gt;</code></p>
-            <textarea defaultValue={props.value}
+
+            <div className='password-input-group'>
+                <label htmlFor='password'>Password</label>
+                <input id='password' type="text" onChange={(e) => setPassword(e.target.value)}/>
+            </div>
+            <div className='content-input-group'>
+            <label htmlFor='content'>Content</label>
+            <textarea id='content' defaultValue={props.value}
                       onChange={(e) => setRawValue(e.target.value)}></textarea>
+            </div>
         </div>
     )
 }

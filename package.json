@@ -38,7 +38,7 @@
         "node": ">=18"
     },
     "scripts": {
-        "dev": "vite",
+        "start": "vite",
         "build": "NODE_ENV=production vite build",
         "preview": "vite preview"
     }
