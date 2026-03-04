@@ -1,6 +1,6 @@
 backend:
-  name: test-repo
-  login: false
+  name: proxy
+  proxy_url: http://localhost:8081/api/v1
 media_folder: assets
 collections:
   - label: Test

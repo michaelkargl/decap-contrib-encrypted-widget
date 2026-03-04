@@ -8,29 +8,45 @@ export interface PreviewProps<TValue = any> {
 }
 
 
-const Preview: React.FC<PreviewProps<string>> = ({value, getAsset}) => {
+const Preview: React.FC<PreviewProps<string>> = ({value}) => {
     const [password, setPassword] = React.useState('');
-    const [content, setContent] = React.useState('');
+    const [decrypted, setDecrypted] = React.useState('');
+    const [decryptError, setDecryptError] = React.useState(false);
 
     useEffect(() => {
-        const decryptValueAsync = async (value: string, password: string) => {
-            const cryptoService = await CryptoService.buildAsync(AES_LENGTH, KEY_LENGTH);
-            try {
-                const decrypted = await cryptoService.decryptValueAsync(value ?? '', password);
-                setContent(decrypted);
-            } catch (e) {
-                setContent(value ?? '');
-            }
+        if (!value || !password) {
+            setDecrypted('');
+            setDecryptError(false);
+            return;
         }
 
-        // noinspection JSIgnoredPromiseFromCall
-        decryptValueAsync(value ?? '', password);
+        const tryDecrypt = async () => {
+            const service = await CryptoService.buildAsync(AES_LENGTH, KEY_LENGTH);
+            try {
+                const result = await service.decryptValueAsync(value, password);
+                setDecrypted(result);
+                setDecryptError(false);
+            } catch {
+                setDecrypted('');
+                setDecryptError(true);
+            }
+        };
+
+        tryDecrypt();
     }, [value, password]);
 
-    return (<>
-        <input type='text' onChange={(e) => setPassword(e.target.value)} />
-        <div>{content}</div>
-    </>);
+    return (
+        <div> 
+            <div>
+                <strong>Content:</strong>
+                <p>{decrypted || value || ''}</p>
+            </div>
+            <div>
+                <label>Password: <input type="password" onChange={(e) => setPassword(e.target.value)}/></label>
+                {decryptError && <span> Incorrect password</span>}
+            </div>
+        </div>
+    );
 };
 
 export default Preview;

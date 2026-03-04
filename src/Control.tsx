@@ -1,9 +1,6 @@
-import React, {useEffect} from 'react';
-import {AesLength} from "./AesLength";
-import {KeyLength} from "./KeyLength";
+import React from 'react';
 import {CryptoService} from "./CryptoService";
 import {AES_LENGTH, KEY_LENGTH} from "./Config";
-
 
 
 export interface DecapControlProps<TValue = any> {
@@ -16,38 +13,62 @@ export interface DecapControlProps<TValue = any> {
 
 
 export const Control: React.FC<DecapControlProps<string>> = (props) => {
-    const [rawValue, setRawValue] = React.useState(props.value);
     const [password, setPassword] = React.useState("");
+    const [plaintext, setPlaintext] = React.useState("");
+    const [isUnlocked, setIsUnlocked] = React.useState(!props.value);
+    const [decryptError, setDecryptError] = React.useState(false);
 
-    useEffect(() => {
-        async function encryptDecryptAsync(value: string, password: string): Promise<void> {
-            if (value === null || value === undefined) {
-                return;
+    const handleContentChange = async (value: string) => {
+        setPlaintext(value);
+        if (!password) return;
+        const service = await CryptoService.buildAsync(AES_LENGTH, KEY_LENGTH);
+        const encrypted = await service.encryptValueAsync(value, password);
+        props.onChange(encrypted);
+    };
+
+    const handlePasswordChange = async (newPassword: string) => {
+        setPassword(newPassword);
+        if (!newPassword) return;
+
+        const service = await CryptoService.buildAsync(AES_LENGTH, KEY_LENGTH);
+
+        if (props.value && !isUnlocked) {
+            // Existing encrypted content — try to decrypt with this password
+            try {
+                const decrypted = await service.decryptValueAsync(props.value, newPassword);
+                setPlaintext(decrypted);
+                setIsUnlocked(true);
+                setDecryptError(false);
+            } catch {
+                setDecryptError(true);
             }
-
-            const cryptoService = await CryptoService.buildAsync(AES_LENGTH, KEY_LENGTH);
-            const encrypted = await cryptoService.encryptValueAsync(value, password);
-            props.onChange(`${encrypted}`);
+        } else if (plaintext) {
+            // No existing content, or already unlocked — re-encrypt plaintext with updated password
+            const encrypted = await service.encryptValueAsync(plaintext, newPassword);
+            props.onChange(encrypted);
         }
-
-        encryptDecryptAsync(rawValue ?? '', password).then(console.log);
-    }, [rawValue, password]);
+    };
 
     return (
         <div className='control-component'>
-            <p>Control.jsx, You can put some text into <code>&lt;input /&gt;</code></p>
-
             <div className='password-input-group'>
                 <label htmlFor='password'>Password</label>
-                <input id='password' type="text" onChange={(e) => setPassword(e.target.value)}/>
+                <input id='password' type="password" onChange={(e) => handlePasswordChange(e.target.value)}/>
+                {decryptError && <span>Incorrect password</span>}
             </div>
-            <div className='content-input-group'>
-            <label htmlFor='content'>Content</label>
-            <textarea id='content' defaultValue={props.value}
-                      onChange={(e) => setRawValue(e.target.value)}></textarea>
-            </div>
+            {isUnlocked
+                ? (
+                    <div className='content-input-group'>
+                        <label htmlFor='content'>Content</label>
+                        <textarea id='content' value={plaintext}
+                                  onChange={(e) => handleContentChange(e.target.value)}/>
+                    </div>
+                ) : (
+                    props.value && <p>Content is encrypted. Enter password to edit.</p>
+                )
+            }
         </div>
-    )
-}
+    );
+};
 
 export default Control;
