@@ -62,6 +62,15 @@ export default defineConfig(({ command, mode }) => {
                 },
                 formats: ['iife'], // You can add other formats if you need.
             },
+            rollupOptions: {
+                external: ['react', 'react-dom'],
+                output: {
+                    globals: {
+                        react: 'React',
+                        'react-dom': 'ReactDOM'
+                    }
+                }
+            },
             sourcemap: true
         }
     }
