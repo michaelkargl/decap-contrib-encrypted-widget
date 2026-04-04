@@ -5,7 +5,11 @@
 
 ## About
 
-This widget allows the use of the `encrypted` widget that encrypts a secret using a symmetric-key algorithm.
+Adds a password-protected, encrypted field to your Decap CMS editor. Content is encrypted client-side using
+AES-GCM with PBKDF2 key derivation before it ever reaches your git repository — no plaintext, no server-side
+keys, no extra infrastructure. Editors with the password can decrypt and edit the content inline; everyone
+else sees only ciphertext.
+
 
 ```mermaid
 sequenceDiagram
